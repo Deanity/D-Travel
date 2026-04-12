@@ -27,6 +27,8 @@ export const CategoriesPage = () => {
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCategories();
@@ -92,20 +94,25 @@ export const CategoriesPage = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
+  const handleDeleteConfirm = async () => {
+    if (!deletingId) return;
 
     try {
+      setSubmitting(true);
       const { error } = await supabase
         .from('categories')
         .update({ deleted_at: new Date().toISOString() })
-        .eq('id', id);
+        .eq('id', deletingId);
 
       if (error) throw error;
       toast.success('Category deleted successfully');
+      setDeletingId(null);
+      setIsDeleteModalOpen(false);
       fetchCategories();
     } catch (error: any) {
       toast.error(error.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -179,7 +186,10 @@ export const CategoriesPage = () => {
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           className="text-destructive focus:text-destructive"
-                          onClick={() => handleDelete(cat.id)}
+                          onClick={() => {
+                            setDeletingId(cat.id);
+                            setIsDeleteModalOpen(true);
+                          }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Delete
@@ -221,6 +231,26 @@ export const CategoriesPage = () => {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Delete Category</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this category? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="pt-4">
+            <Button type="button" variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="button" variant="destructive" onClick={handleDeleteConfirm} disabled={submitting}>
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              Delete
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

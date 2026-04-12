@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '@/src/lib/supabase';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/src/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { 
   Dialog, 
   DialogContent, 
@@ -29,6 +29,8 @@ export const DestinationsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDestination, setEditingDestination] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -50,7 +52,7 @@ export const DestinationsPage = () => {
       const [destRes, catRes] = await Promise.all([
         supabase
           .from('destinations')
-          .select('*, categories(name)')
+          .select('*, categories(name), destination_images(image_url)')
           .is('deleted_at', null)
           .order('created_at', { ascending: false }),
         supabase
@@ -80,7 +82,7 @@ export const DestinationsPage = () => {
         description: destination.description || '',
         price: destination.price,
         category_id: destination.category_id,
-        image_url: '' // We'll handle images separately if needed, but for now just URL
+        image_url: destination.destination_images?.[0]?.image_url || ''
       });
     } else {
       setEditingDestination(null);
@@ -115,6 +117,25 @@ export const DestinationsPage = () => {
           .eq('id', editingDestination.id);
 
         if (error) throw error;
+
+        if (formData.image_url) {
+          const { data: existingImages } = await supabase
+            .from('destination_images')
+            .select('id')
+            .eq('destination_id', editingDestination.id);
+            
+          if (existingImages && existingImages.length > 0) {
+            await supabase
+              .from('destination_images')
+              .update({ image_url: formData.image_url })
+              .eq('destination_id', editingDestination.id);
+          } else {
+            await supabase
+              .from('destination_images')
+              .insert([{ destination_id: editingDestination.id, image_url: formData.image_url }]);
+          }
+        }
+
         toast.success('Destination updated successfully');
       } else {
         const { data, error } = await supabase
@@ -151,20 +172,25 @@ export const DestinationsPage = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this destination?')) return;
+  const handleDeleteConfirm = async () => {
+    if (!deletingId) return;
 
     try {
+      setSubmitting(true);
       const { error } = await supabase
         .from('destinations')
         .update({ deleted_at: new Date().toISOString() })
-        .eq('id', id);
+        .eq('id', deletingId);
 
       if (error) throw error;
       toast.success('Destination deleted successfully');
+      setDeletingId(null);
+      setIsDeleteModalOpen(false);
       fetchData();
     } catch (error: any) {
       toast.error(error.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -211,81 +237,95 @@ export const DestinationsPage = () => {
         </Select>
       </div>
 
-      <div className="border rounded-lg bg-card overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Rating</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              Array(5).fill(0).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-                  <TableCell className="text-right"><Skeleton className="h-8 w-8 ml-auto rounded-full" /></TableCell>
-                </TableRow>
-              ))
-            ) : filteredDestinations.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
-                  No destinations found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredDestinations.map((dest) => (
-                <TableRow key={dest.id}>
-                  <TableCell className="font-medium">{dest.name}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <MapPin className="w-3 h-3" />
-                      {dest.location}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{dest.categories?.name}</Badge>
-                  </TableCell>
-                  <TableCell>${dest.price}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                      {dest.rating.toFixed(1)}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {loading ? (
+          Array(8).fill(0).map((_, i) => (
+            <Card key={i} className="flex flex-col overflow-hidden">
+              <Skeleton className="h-48 w-full rounded-none" />
+              <CardHeader className="p-4 pb-2">
+                <Skeleton className="h-5 w-3/4 mb-2" />
+                <Skeleton className="h-4 w-1/2" />
+              </CardHeader>
+              <CardContent className="p-4 pt-0">
+                <Skeleton className="h-4 w-1/4" />
+              </CardContent>
+            </Card>
+          ))
+        ) : filteredDestinations.length === 0 ? (
+          <div className="col-span-full h-64 flex flex-col items-center justify-center text-muted-foreground border rounded-lg bg-card border-dashed">
+            <p>No destinations found.</p>
+          </div>
+        ) : (
+          filteredDestinations.map((dest) => {
+            // Check if there are images and fallback if not
+            const imageUrl = dest.destination_images && dest.destination_images.length > 0 
+              ? dest.destination_images[0].image_url 
+              : 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80';
+              
+            return (
+              <Card key={dest.id} className="flex flex-col overflow-hidden group hover:shadow-md transition-all">
+                <div className="relative h-48 overflow-hidden bg-muted">
+                  <img 
+                    src={imageUrl} 
+                    alt={dest.name} 
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" 
+                  />
+                  <div className="absolute top-2 right-2 flex gap-1">
+                    <Badge className="bg-background/80 text-foreground backdrop-blur-sm shadow-sm hover:bg-background/90 text-xs">
+                      {dest.categories?.name || 'Uncategorized'}
+                    </Badge>
+                  </div>
+                  <div className="absolute top-2 left-2">
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="inline-flex items-center justify-center rounded-md h-9 w-9 text-muted-foreground hover:bg-accent hover:text-accent-foreground outline-none">
+                      <DropdownMenuTrigger className="inline-flex items-center justify-center rounded-full bg-background/80 backdrop-blur-sm shadow-sm h-8 w-8 text-foreground hover:bg-accent hover:text-accent-foreground outline-none">
                         <MoreHorizontal className="w-4 h-4" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="start">
                         <DropdownMenuItem onClick={() => handleOpenModal(dest)}>
                           <Edit2 className="w-4 h-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           className="text-destructive focus:text-destructive"
-                          onClick={() => handleDelete(dest.id)}
+                          onClick={() => {
+                            setDeletingId(dest.id);
+                            setIsDeleteModalOpen(true);
+                          }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+                  </div>
+                </div>
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex justify-between items-start gap-2">
+                    <CardTitle className="text-lg leading-tight line-clamp-1" title={dest.name}>
+                      {dest.name}
+                    </CardTitle>
+                    <div className="flex items-center gap-1 shrink-0 text-sm font-semibold whitespace-nowrap bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 px-2 py-0.5 rounded-full">
+                      ${dest.price}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1" title={dest.location}>
+                    <MapPin className="w-3.5 h-3.5 shrink-0" />
+                    <span className="line-clamp-1">{dest.location}</span>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 flex-1 flex flex-col justify-end">
+                  <div className="flex items-center justify-between mt-auto pt-4 text-sm border-t border-border/50">
+                    <div className="flex items-center gap-1 text-muted-foreground">
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-medium text-foreground">{dest.rating?.toFixed(1) || '0.0'}</span>
+                      <span className="text-xs ml-0.5">(Reviews)</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })
+        )}
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -333,7 +373,9 @@ export const DestinationsPage = () => {
                   onValueChange={(val) => setFormData({...formData, category_id: val})}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder="Select category">
+                      {categories.find(c => c.id === formData.category_id)?.name}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map(cat => (
@@ -350,17 +392,15 @@ export const DestinationsPage = () => {
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                 />
               </div>
-              {!editingDestination && (
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="image_url">Image URL</Label>
-                  <Input 
-                    id="image_url" 
-                    placeholder="https://..."
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({...formData, image_url: e.target.value})}
-                  />
-                </div>
-              )}
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="image_url">Image URL</Label>
+                <Input 
+                  id="image_url" 
+                  placeholder="https://..."
+                  value={formData.image_url}
+                  onChange={(e) => setFormData({...formData, image_url: e.target.value})}
+                />
+              </div>
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
@@ -370,6 +410,26 @@ export const DestinationsPage = () => {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Delete Destination</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this destination? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="pt-4">
+            <Button type="button" variant="outline" onClick={() => setIsDeleteModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="button" variant="destructive" onClick={handleDeleteConfirm} disabled={submitting}>
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              Delete
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

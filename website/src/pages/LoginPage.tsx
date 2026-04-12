@@ -71,68 +71,103 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1 text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-primary-foreground">
-              <Plane className="w-8 h-8" />
-            </div>
+    <div className="min-h-screen flex flex-col md:flex-row bg-background">
+      {/* Left side: Premium Branding */}
+      <div className="hidden md:flex flex-1 relative bg-zinc-950 overflow-hidden items-center justify-center">
+        <div 
+          className="absolute inset-0 opacity-[0.03]" 
+          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} 
+        />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/30 via-transparent to-transparent opacity-80" />
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px]" />
+        
+        <div className="relative z-10 text-center space-y-8 max-w-lg px-8">
+          <div className="w-24 h-24 bg-primary rounded-3xl flex items-center justify-center mx-auto shadow-[0_0_60px_-15px_rgba(255,184,0,0.5)] animate-in zoom-in duration-1000">
+            <Plane className="w-12 h-12 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl font-bold">Wanderlust Admin</CardTitle>
-          <CardDescription>
-            Enter your credentials to access the dashboard
-          </CardDescription>
-          {!isSupabaseConfigured && (
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl text-blue-900 text-sm text-left flex gap-3">
-              <Info className="w-5 h-5 shrink-0 text-blue-600" />
-              <div className="space-y-1">
-                <p className="font-semibold">Demo Mode Active</p>
-                <p className="opacity-80">Supabase is not configured yet. Use these credentials to explore the UI:</p>
-                <div className="mt-2 font-mono text-xs bg-white/50 p-2 rounded border border-blue-200/50">
-                  Email: admin@example.com<br />
-                  Pass: admin123
+          <div className="space-y-4 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-150">
+            <h1 className="text-5xl text-white font-extrabold tracking-tight">
+              DTravel <span className="text-primary">Admin</span>
+            </h1>
+            <p className="text-zinc-400 text-lg leading-relaxed">
+              Pusat kendali eksekutif untuk manajemen destinasi, pemesanan, dan pelanggan.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right side: Login Form */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 animate-in fade-in slide-in-from-right-12 duration-700">
+        <div className="w-full max-w-[420px] space-y-8">
+          <div className="text-center md:text-left">
+            <div className="md:hidden w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-primary-foreground mb-6 mx-auto shadow-lg shadow-primary/30">
+              <Plane className="w-7 h-7" />
+            </div>
+            <h2 className="text-3xl font-extrabold tracking-tight">Selamat Datang</h2>
+            <p className="text-muted-foreground mt-2 text-sm md:text-base">
+              Masukkan kredensial Anda untuk mengakses dasbor.
+            </p>
+            
+            {!isSupabaseConfigured && (
+              <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-sm flex gap-3 animate-in fade-in slide-in-from-top-4 duration-500">
+                <Info className="w-5 h-5 shrink-0 text-amber-500" />
+                <div className="space-y-1.5 text-left w-full">
+                  <p className="font-semibold text-amber-600 dark:text-amber-400">Mode Demo Aktif</p>
+                  <p className="text-amber-700/80 dark:text-amber-200/80">Supabase belum dikonfigurasi. Gunakan akses ini untuk masuk:</p>
+                  <div className="mt-2 font-mono text-xs bg-background/80 px-3 py-2.5 rounded-lg border border-amber-500/20 text-foreground w-full break-all">
+                    Email: admin@example.com<br />
+                    Pass: admin123
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </CardHeader>
-        <form onSubmit={handleLogin}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="admin@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            <Button className="w-full" type="submit" disabled={loading}>
-              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-              Sign In with Email
-            </Button>
+            )}
+          </div>
 
-            <div className="relative w-full">
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="font-semibold text-sm">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="admin@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-12 px-4 rounded-xl bg-muted/40 border-transparent focus:border-primary focus:bg-background transition-all duration-300"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="font-semibold text-sm">Password</Label>
+                  <span className="text-xs text-primary font-medium cursor-pointer hover:underline transition-all">Lupa password?</span>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-12 px-4 rounded-xl bg-muted/40 border-transparent focus:border-primary focus:bg-background transition-all duration-300"
+                  required
+                />
+              </div>
+            </div>
+
+            <Button 
+              className="w-full h-12 rounded-xl font-bold text-base shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-[0.98]" 
+              type="submit" 
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+              Sign In
+            </Button>
+            
+            <div className="relative w-full my-8">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-muted-foreground/20" />
+                <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground" style={{ backgroundColor: 'var(--card)' }}>
+                <span className="bg-background px-4 text-muted-foreground font-medium tracking-wider">
                   Atau login dengan
                 </span>
               </div>
@@ -141,7 +176,7 @@ export const LoginPage = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full flex items-center gap-2"
+              className="w-full h-12 rounded-xl flex items-center justify-center gap-3 font-medium hover:bg-muted/50 border-input transition-all"
               disabled={loading}
               onClick={handleGoogleLogin}
             >
@@ -154,9 +189,9 @@ export const LoginPage = () => {
               </svg>
               Google
             </Button>
-          </CardFooter>
-        </form>
-      </Card>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

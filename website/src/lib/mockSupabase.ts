@@ -1,7 +1,7 @@
 import { User, Session } from '@supabase/supabase-js';
 
 // Mock data stored in localStorage
-const STORAGE_KEY = 'wanderlust_mock_data';
+const STORAGE_KEY = 'dtravel_mock_data';
 
 const getInitialData = () => {
   const saved = localStorage.getItem(STORAGE_KEY);

@@ -9,12 +9,23 @@ import { Badge } from '@/src/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/src/components/ui/dropdown-menu';
 import { format } from 'date-fns';
 import { Skeleton } from '@/src/components/ui/skeleton';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle 
+} from '@/src/components/ui/dialog';
 
 export const BookingsPage = () => {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchBookings();
@@ -54,6 +65,28 @@ export const BookingsPage = () => {
       fetchBookings();
     } catch (error: any) {
       toast.error(error.message);
+    }
+  };
+
+  const handleCancelConfirm = async () => {
+    if (!cancellingId) return;
+
+    try {
+      setSubmitting(true);
+      const { error } = await supabase
+        .from('bookings')
+        .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+        .eq('id', cancellingId);
+
+      if (error) throw error;
+      toast.success('Booking cancelled successfully');
+      setCancellingId(null);
+      setIsCancelModalOpen(false);
+      fetchBookings();
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -185,8 +218,14 @@ export const BookingsPage = () => {
                           <Clock className="w-4 h-4 mr-2 text-blue-500" />
                           Mark as Pending
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => updateStatus(booking.id, 'cancelled')}>
-                          <XCircle className="w-4 h-4 mr-2 text-destructive" />
+                        <DropdownMenuItem 
+                          className="text-destructive focus:text-destructive"
+                          onClick={() => {
+                            setCancellingId(booking.id);
+                            setIsCancelModalOpen(true);
+                          }}
+                        >
+                          <XCircle className="w-4 h-4 mr-2" />
                           Cancel Booking
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -198,6 +237,26 @@ export const BookingsPage = () => {
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={isCancelModalOpen} onOpenChange={setIsCancelModalOpen}>
+        <DialogContent className="sm:max-w-[400px]">
+          <DialogHeader>
+            <DialogTitle>Cancel Booking</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to cancel this booking? This action will mark the booking as cancelled.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="pt-4">
+            <Button type="button" variant="outline" onClick={() => setIsCancelModalOpen(false)}>
+              Back
+            </Button>
+            <Button type="button" variant="destructive" onClick={handleCancelConfirm} disabled={submitting}>
+              {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              Confirm Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
