@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'login.dart';
 
 class ForgotPasswordInputNewPasswordScreen extends StatefulWidget {
@@ -9,9 +10,87 @@ class ForgotPasswordInputNewPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordInputNewPasswordScreenState extends State<ForgotPasswordInputNewPasswordScreen> {
-  // Variabel untuk toggle show/hide password mandiri di masing-masing field
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _obscurePassword1 = true;
   bool _obscurePassword2 = true;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _updatePassword() async {
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    if (password.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields')),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    if (password.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password must be at least 8 characters')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // User must be authenticated via the reset link for this to work
+      await Supabase.instance.client.auth.updateUser(
+        UserAttributes(password: password),
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password updated successfully!')),
+        );
+        // Clear entire stack and go to login
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false,
+        );
+      }
+    } on AuthException catch (e) {
+      if (mounted) {
+        String message = e.message;
+        if (message.contains('Auth session missing')) {
+          message = 'Please open the reset link from your email first.';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +126,16 @@ class _ForgotPasswordInputNewPasswordScreenState extends State<ForgotPasswordInp
               ),
               const SizedBox(height: 32),
               
-              // Kolom Password (berdasarkan gambar memakai label di atas border/garis)
+              // Password Field
               TextField(
+                controller: _passwordController,
                 obscureText: _obscurePassword1,
-                style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2.0), // Agar titik-titik terlihat tebal
+                style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2.0),
                 decoration: InputDecoration(
                   labelText: 'Password',
                   labelStyle: const TextStyle(color: Colors.grey),
                   floatingLabelStyle: const TextStyle(color: Color(0xFFFCD240)),
-                  floatingLabelBehavior: FloatingLabelBehavior.always, // Tag menimpa garis border
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                   hintText: '••••••••••••',
                   hintStyle: const TextStyle(color: Colors.black87),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -69,7 +149,7 @@ class _ForgotPasswordInputNewPasswordScreenState extends State<ForgotPasswordInp
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(color: Color(0xFFFCD240), width: 1.5), // Border kuning menyala saat aktif
+                    borderSide: const BorderSide(color: Color(0xFFFCD240), width: 1.5),
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -86,12 +166,13 @@ class _ForgotPasswordInputNewPasswordScreenState extends State<ForgotPasswordInp
               ),
               const SizedBox(height: 24),
 
-              // Kolom Confirm Password
+              // Confirm Password Field
               TextField(
+                controller: _confirmPasswordController,
                 obscureText: _obscurePassword2,
                 style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2.0),
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Confirm Password',
                   labelStyle: const TextStyle(color: Colors.grey),
                   floatingLabelStyle: const TextStyle(color: Color(0xFFFCD240)),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -125,7 +206,6 @@ class _ForgotPasswordInputNewPasswordScreenState extends State<ForgotPasswordInp
               ),
               const SizedBox(height: 24),
               
-              // Teks Panduan Syarat Password
               const Text(
                 'Your password must include at least one symbol and be 8 or more characters long.',
                 style: TextStyle(
@@ -135,23 +215,14 @@ class _ForgotPasswordInputNewPasswordScreenState extends State<ForgotPasswordInp
                 ),
               ),
               
-              const Spacer(), // Mendorong button "Save" agar duduk menempel ke bagian dasar layar
+              const Spacer(),
               
               // Save Button
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Membersihkan seluruh stack navigasi dan kembali persis ke Login
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                      (route) => false,
-                    );
-                  },
+                  onPressed: _isLoading ? null : _updatePassword,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFCD240),
                     foregroundColor: Colors.black,
@@ -160,13 +231,22 @@ class _ForgotPasswordInputNewPasswordScreenState extends State<ForgotPasswordInp
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.black,
+                          ),
+                        )
+                      : const Text(
+                          'Save',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -177,3 +257,4 @@ class _ForgotPasswordInputNewPasswordScreenState extends State<ForgotPasswordInp
     );
   }
 }
+

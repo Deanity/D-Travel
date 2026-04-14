@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 import 'createNewAccPassword.dart';
 
 class CreateNewAccEmailScreen extends StatefulWidget {
-  const CreateNewAccEmailScreen({super.key});
+  final String firstName;
+  final String lastName;
+  const CreateNewAccEmailScreen({super.key, required this.firstName, required this.lastName});
 
   @override
   State<CreateNewAccEmailScreen> createState() => _CreateNewAccEmailScreenState();
 }
 
 class _CreateNewAccEmailScreenState extends State<CreateNewAccEmailScreen> {
+  final _emailController = TextEditingController();
   bool _receiveMarketing = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +56,7 @@ class _CreateNewAccEmailScreenState extends State<CreateNewAccEmailScreen> {
               
               // Email Field (menggunakan floating label)
               TextField(
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -116,10 +126,20 @@ class _CreateNewAccEmailScreenState extends State<CreateNewAccEmailScreen> {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
+                    if (_emailController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Please enter your email')),
+                      );
+                      return;
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const CreateNewAccPasswordScreen(),
+                        builder: (context) => CreateNewAccPasswordScreen(
+                          firstName: widget.firstName,
+                          lastName: widget.lastName,
+                          email: _emailController.text.trim(),
+                        ),
                       ),
                     );
                   },

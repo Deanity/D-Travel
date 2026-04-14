@@ -9,6 +9,16 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _firstNameController,
                 decoration: InputDecoration(
                   hintText: 'Prano',
                   hintStyle: TextStyle(color: Colors.grey.shade400),
@@ -77,6 +88,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _lastNameController,
                 decoration: InputDecoration(
                   hintText: 'Cende',
                   hintStyle: TextStyle(color: Colors.grey.shade400),
@@ -101,10 +113,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Input Email Button
               ElevatedButton(
                 onPressed: () {
+                  if (_firstNameController.text.isEmpty || _lastNameController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Please enter first and last name')),
+                    );
+                    return;
+                  }
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CreateNewAccEmailScreen(),
+                      builder: (context) => CreateNewAccEmailScreen(
+                        firstName: _firstNameController.text,
+                        lastName: _lastNameController.text,
+                      ),
                     ),
                   );
                 },

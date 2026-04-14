@@ -1,8 +1,72 @@
 import 'package:flutter/material.dart';
-import 'forgotPasswordInputNewPassword.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'forgotPasswordOTP.dart';
 
-class ForgotPasswordInputEmailScreen extends StatelessWidget {
+class ForgotPasswordInputEmailScreen extends StatefulWidget {
   const ForgotPasswordInputEmailScreen({super.key});
+
+  @override
+  State<ForgotPasswordInputEmailScreen> createState() => _ForgotPasswordInputEmailScreenState();
+}
+
+class _ForgotPasswordInputEmailScreenState extends State<ForgotPasswordInputEmailScreen> {
+  final _emailController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _resetPassword() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your email')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // For mobile, you need to configure deep links in Supabase Dashboard
+      // Site URL: io.supabase.flutter://reset-callback/
+      await Supabase.instance.client.auth.resetPasswordForEmail(email);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Reset link sent to your email!')),
+        );
+        // Navigate to OTP screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ForgotPasswordOTPScreen(email: email),
+          ),
+        );
+      }
+    } on AuthException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +109,7 @@ class ForgotPasswordInputEmailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: 'prono@gmail.com',
@@ -65,18 +130,11 @@ class ForgotPasswordInputEmailScreen extends StatelessWidget {
                 ),
               ),
               
-              const SizedBox(height: 48), // Memisahkan button sedikit ke bawah (tanpa menempel dasar)
+              const SizedBox(height: 48),
               
               // Submit Button
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ForgotPasswordInputNewPasswordScreen(),
-                    ),
-                  );
-                },
+                onPressed: _isLoading ? null : _resetPassword,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFCD240),
                   foregroundColor: Colors.black,
@@ -86,13 +144,22 @@ class ForgotPasswordInputEmailScreen extends StatelessWidget {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black,
+                        ),
+                      )
+                    : const Text(
+                        'Submit',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ],
           ),
@@ -101,3 +168,4 @@ class ForgotPasswordInputEmailScreen extends StatelessWidget {
     );
   }
 }
+

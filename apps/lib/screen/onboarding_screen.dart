@@ -14,17 +14,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> onboardingData = [
     {
-      "image": "https://i.pinimg.com/1200x/bc/5b/83/bc5b833fd3d6ff7c6281c0dea24808fd.jpg",
+      "image": "https://i.pinimg.com/736x/ca/b2/f1/cab2f1c998bd454613d9b48eed8e70fc.jpg",
       "title": "Lets explore\nthe world",
       "subtitle": "let's explore the world with us with just a\nfew clicks"
     },
     {
-      "image": "https://i.pinimg.com/1200x/30/2e/2c/302e2c5c3ad5310fa6693a3faa6f9d3e.jpg",
+      "image": "https://i.pinimg.com/736x/ee/ca/d2/eecad2477524d48452f28c88e0230c61.jpg",
       "title": "Visit tourist\nattractions",
       "subtitle": "Find thousands of tourist destinations\nready for you to visit"
     },
     {
-      "image": "https://i.pinimg.com/736x/c8/5e/04/c85e040f8bb676b677ed9884b6559690.jpg",
+      "image": "https://i.pinimg.com/1200x/08/cc/60/08cc60e6fdaee7f2f7874fb720601eb2.jpg",
       "title": "Get ready for\nnext trip",
       "subtitle": "Find thousands of tourist destinations\nready for you to visit"
     },

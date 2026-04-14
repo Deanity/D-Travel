@@ -24,31 +24,6 @@ class SuccessCreateAccScreen extends StatelessWidget {
                    child: Stack(
                      alignment: Alignment.center,
                      children: [
-                       // Bayangan Elips Kuning di bawah
-                       Positioned(
-                         bottom: 25,
-                         child: Container(
-                           width: 110,
-                           height: 35,
-                           decoration: BoxDecoration(
-                             color: const Color(0xFFFCD240).withOpacity(0.5),
-                             borderRadius: BorderRadius.circular(50),
-                             border: Border.all(color: Colors.black, width: 2), // Ring outer bawah // Atas ada shadow? kita border saja mirip gambar
-                           ),
-                         ),
-                       ),
-                       // Elips yang kuning pure tanpa pinggiran
-                        Positioned(
-                         bottom: 18,
-                         child: Container(
-                           width: 100,
-                           height: 30,
-                           decoration: BoxDecoration(
-                             color: const Color(0xFFFCD240),
-                             borderRadius: BorderRadius.circular(50),
-                           ),
-                         ),
-                       ),
                        // Ikon Map Pin
                        const Positioned(
                          top: 30, // Geser ke atas agar tidak bentrok dengan elips

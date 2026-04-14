@@ -1,15 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'createNewAccOTP.dart';
 
 class CreateNewAccPasswordScreen extends StatefulWidget {
-  const CreateNewAccPasswordScreen({super.key});
+  final String firstName;
+  final String lastName;
+  final String email;
+  const CreateNewAccPasswordScreen({
+    super.key,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+  });
 
   @override
   State<CreateNewAccPasswordScreen> createState() => _CreateNewAccPasswordScreenState();
 }
 
 class _CreateNewAccPasswordScreenState extends State<CreateNewAccPasswordScreen> {
+  final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signUp() async {
+    if (_passwordController.text.length < 8) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password must be at least 8 characters')),
+        );
+      }
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await Supabase.instance.client.auth.signUp(
+        email: widget.email,
+        password: _passwordController.text,
+        data: {
+          'first_name': widget.firstName,
+          'last_name': widget.lastName,
+        },
+      );
+      
+      if (mounted) {
+        // Go to OTP screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreateNewAccOTPScreen(email: widget.email),
+          ),
+        );
+      }
+    } on AuthException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +118,7 @@ class _CreateNewAccPasswordScreenState extends State<CreateNewAccPasswordScreen>
               
               // Password Field (dengan floating label)
               TextField(
+                controller: _passwordController,
                 obscureText: _obscurePassword,
                 style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2.0),
                 decoration: InputDecoration(
@@ -101,14 +173,7 @@ class _CreateNewAccPasswordScreenState extends State<CreateNewAccPasswordScreen>
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreateNewAccOTPScreen(),
-                      ),
-                    );
-                  },
+                  onPressed: _isLoading ? null : _signUp,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFCD240),
                     foregroundColor: Colors.black,
@@ -117,13 +182,22 @@ class _CreateNewAccPasswordScreenState extends State<CreateNewAccPasswordScreen>
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Verification',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                        ),
+                      )
+                    : const Text(
+                        'Verification',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                 ),
               ),
               const SizedBox(height: 16),

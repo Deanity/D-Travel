@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../home/homepage.dart';
 
 class FavoriteExploreScreen extends StatefulWidget {
   const FavoriteExploreScreen({super.key});
@@ -30,6 +32,25 @@ class _FavoriteExploreScreenState extends State<FavoriteExploreScreen> {
         _selectedItems.add(title);
       }
     });
+  }
+
+  Future<void> _saveAndContinue() async {
+    if (_selectedItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select at least one favorite place')),
+      );
+      return;
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('favorite_places', _selectedItems.toList());
+
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomepageScreen()),
+      );
+    }
   }
 
   @override
@@ -161,9 +182,7 @@ class _FavoriteExploreScreenState extends State<FavoriteExploreScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: Arahkan ke Dashboard
-                  },
+                  onPressed: _saveAndContinue,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFCD240),
                     foregroundColor: Colors.black,
