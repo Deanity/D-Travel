@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/src/lib/supabase';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
@@ -19,6 +19,37 @@ import { toast } from 'sonner';
 import { Badge } from '@/src/components/ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/src/components/ui/dropdown-menu';
 import { Skeleton } from '@/src/components/ui/skeleton';
+
+import { cn } from '@/src/lib/utils';
+
+// Internal component for optimized image loading
+const DestinationImage = ({ src, alt }: { src: string; alt: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  const fallback = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80";
+
+  return (
+    <div className="relative w-full h-full bg-muted overflow-hidden">
+      {(!isLoaded && !hasError) && <Skeleton className="absolute inset-0 w-full h-full rounded-none" />}
+      <img 
+        src={hasError ? fallback : src} 
+        alt={alt} 
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        onError={() => {
+          setHasError(true);
+          setIsLoaded(true);
+        }}
+        className={cn(
+          "object-cover w-full h-full group-hover:scale-105 transition-[transform,opacity] duration-500 will-change-transform",
+          isLoaded ? "opacity-100" : "opacity-0"
+        )} 
+      />
+    </div>
+  );
+};
 
 export const DestinationsPage = () => {
   const [destinations, setDestinations] = useState<any[]>([]);
@@ -54,7 +85,8 @@ export const DestinationsPage = () => {
           .from('destinations')
           .select('*, categories(name), destination_images(image_url)')
           .is('deleted_at', null)
-          .order('created_at', { ascending: false }),
+          .order('created_at', { ascending: false })
+          .limit(24), // Add limit for better performance
         supabase
           .from('categories')
           .select('*')
@@ -194,12 +226,14 @@ export const DestinationsPage = () => {
     }
   };
 
-  const filteredDestinations = destinations.filter(dest => {
-    const matchesSearch = dest.name.toLowerCase().includes(search.toLowerCase()) || 
-                         dest.location.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || dest.category_id === categoryFilter;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredDestinations = useMemo(() => {
+    return destinations.filter(dest => {
+      const matchesSearch = dest.name.toLowerCase().includes(search.toLowerCase()) || 
+                           dest.location.toLowerCase().includes(search.toLowerCase());
+      const matchesCategory = categoryFilter === 'all' || dest.category_id === categoryFilter;
+      return matchesSearch && matchesCategory;
+    });
+  }, [destinations, search, categoryFilter]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -265,11 +299,7 @@ export const DestinationsPage = () => {
             return (
               <Card key={dest.id} className="flex flex-col overflow-hidden group hover:shadow-md transition-all">
                 <div className="relative h-48 overflow-hidden bg-muted">
-                  <img 
-                    src={imageUrl} 
-                    alt={dest.name} 
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" 
-                  />
+                  <DestinationImage src={imageUrl} alt={dest.name} />
                   <div className="absolute top-2 right-2 flex gap-1">
                     <Badge className="bg-background/80 text-foreground backdrop-blur-sm shadow-sm hover:bg-background/90 text-xs">
                       {dest.categories?.name || 'Uncategorized'}

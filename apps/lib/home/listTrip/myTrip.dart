@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../homepage.dart';
+import '../whishlist/wishList.dart';
+import '../profile/profile.dart';
 
 class MyTripScreen extends StatefulWidget {
   const MyTripScreen({super.key});
@@ -301,14 +303,34 @@ class _MyTripScreenState extends State<MyTripScreen> {
 
           // Wishlist – not selected
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 350),
+                  pageBuilder: (_, __, ___) => const WishListScreen(),
+                  transitionsBuilder: (_, animation, __, child) =>
+                      FadeTransition(opacity: animation, child: child),
+                ),
+              );
+            },
             child: Icon(Icons.favorite_border_rounded,
                 color: Colors.grey.shade400, size: 26),
           ),
 
           // Profile – not selected
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 350),
+                  pageBuilder: (_, __, ___) => const ProfileScreen(),
+                  transitionsBuilder: (_, animation, __, child) =>
+                      FadeTransition(opacity: animation, child: child),
+                ),
+              );
+            },
             child: Icon(Icons.person_outline_rounded,
                 color: Colors.grey.shade400, size: 26),
           ),

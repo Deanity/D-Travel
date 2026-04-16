@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'listTrip/myTrip.dart';
+import 'whishlist/wishList.dart';
+import 'profile/profile.dart';
+import 'details/detailPage.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -231,130 +234,164 @@ class _HomepageScreenState extends State<HomepageScreen> {
   }
 
   Widget _buildFavoriteCard(String name, String location, String rating, String imageUrl) {
-    return Container(
-      width: 180,
-      margin: const EdgeInsets.only(right: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
-        ),
-      ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailPage(
+              name: name,
+              location: location,
+              rating: rating,
+              imageUrl: imageUrl,
+              price: '245.00',
+              description: 'Bali is an island in Indonesia known for its verdant volcanoes, unique rice terraces, beaches, and beautiful coral reefs. Before becoming a tourist attraction, Kuta was a trading port where local products were traded.',
+            ),
+          ),
+        );
+      },
       child: Container(
-        padding: const EdgeInsets.all(16),
+        width: 180,
+        margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+          image: DecorationImage(
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                const SizedBox(height: 120),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  const SizedBox(height: 120),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.favorite, color: Colors.redAccent, size: 16),
                     ),
-                    child: const Icon(Icons.favorite, color: Colors.redAccent, size: 16),
                   ),
-                ),
-              ],
-            ),
-            Text(
-              name,
-              style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(Icons.location_on, color: Colors.white70, size: 12),
-                const SizedBox(width: 4),
-                Text(location, style: const TextStyle(color: Colors.white70, fontSize: 10)),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Icons.star, color: Colors.amber, size: 14),
-                const Icon(Icons.star, color: Colors.amber, size: 14),
-                const Icon(Icons.star, color: Colors.amber, size: 14),
-                const Icon(Icons.star, color: Colors.amber, size: 14),
-                const Icon(Icons.star_half, color: Colors.amber, size: 14),
-                const SizedBox(width: 4),
-                Text(rating, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ],
+                ],
+              ),
+              Text(
+                name,
+                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.location_on, color: Colors.white70, size: 12),
+                  const SizedBox(width: 4),
+                  Text(location, style: const TextStyle(color: Colors.white70, fontSize: 10)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.star, color: Colors.amber, size: 14),
+                  const Icon(Icons.star, color: Colors.amber, size: 14),
+                  const Icon(Icons.star, color: Colors.amber, size: 14),
+                  const Icon(Icons.star, color: Colors.amber, size: 14),
+                  const Icon(Icons.star_half, color: Colors.amber, size: 14),
+                  const SizedBox(width: 4),
+                  Text(rating, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildPackageCard(String name, String price, String rating, String desc, String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(imageUrl, width: 90, height: 90, fit: BoxFit.cover),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    Icon(Icons.favorite_border, color: Colors.grey.shade400, size: 20),
-                  ],
-                ),
-                Text(
-                  '\$$price',
-                  style: const TextStyle(color: Color(0xFFFCD240), fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 14),
-                    const Icon(Icons.star, color: Colors.amber, size: 14),
-                    const Icon(Icons.star, color: Colors.amber, size: 14),
-                    const Icon(Icons.star, color: Colors.amber, size: 14),
-                    const SizedBox(width: 4),
-                    Text(rating, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  desc,
-                  style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailPage(
+              name: name,
+              location: 'Indonesia',
+              rating: rating,
+              imageUrl: imageUrl,
+              price: price,
+              description: desc,
             ),
           ),
-        ],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.grey.shade100),
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(imageUrl, width: 90, height: 90, fit: BoxFit.cover),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Icon(Icons.favorite_border, color: Colors.grey.shade400, size: 20),
+                    ],
+                  ),
+                  Text(
+                    '\$$price',
+                    style: const TextStyle(color: Color(0xFFFCD240), fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 14),
+                      const Icon(Icons.star, color: Colors.amber, size: 14),
+                      const Icon(Icons.star, color: Colors.amber, size: 14),
+                      const Icon(Icons.star, color: Colors.amber, size: 14),
+                      const SizedBox(width: 4),
+                      Text(rating, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    desc,
+                    style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -410,13 +447,33 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
           // Wishlist
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 350),
+                  pageBuilder: (_, __, ___) => const WishListScreen(),
+                  transitionsBuilder: (_, animation, __, child) =>
+                      FadeTransition(opacity: animation, child: child),
+                ),
+              );
+            },
             child: Icon(Icons.favorite_border_rounded, color: Colors.grey.shade400, size: 26),
           ),
 
           // Profile
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 350),
+                  pageBuilder: (_, __, ___) => const ProfileScreen(),
+                  transitionsBuilder: (_, animation, __, child) =>
+                      FadeTransition(opacity: animation, child: child),
+                ),
+              );
+            },
             child: Icon(Icons.person_outline_rounded, color: Colors.grey.shade400, size: 26),
           ),
         ],
