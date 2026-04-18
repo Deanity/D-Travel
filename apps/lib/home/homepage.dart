@@ -4,7 +4,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'listTrip/myTrip.dart';
 import 'whishlist/wishList.dart';
 import 'profile/profile.dart';
-import 'details/detailPage.dart';
+import 'details/placeCover.dart';
+import 'search/search.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -17,6 +18,15 @@ class _HomepageScreenState extends State<HomepageScreen> {
   List<String> _favoriteCategories = [];
   bool _isLoading = true;
   String _userName = "Traveler";
+
+  int _selectedCategoryIndex = 0;
+  final List<Map<String, String>> _categories = [
+    {'icon': '❤️', 'label': 'All'},
+    {'icon': '🏝️', 'label': 'Beach'},
+    {'icon': '🗻', 'label': 'Mountain'},
+    {'icon': '🌲', 'label': 'Forest'},
+    {'icon': '🌊', 'label': 'Ocean'},
+  ];
 
   @override
   void initState() {
@@ -105,22 +115,35 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 const SizedBox(height: 24),
 
                 // Search Bar
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8F8F8),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Search destination',
-                        style: TextStyle(color: Colors.grey.shade400, fontSize: 16),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        transitionDuration: const Duration(milliseconds: 300),
+                        pageBuilder: (_, __, ___) => const SearchScreen(),
+                        transitionsBuilder: (_, animation, __, child) =>
+                            FadeTransition(opacity: animation, child: child),
                       ),
-                      const Spacer(),
-                      const Icon(Icons.search, color: Colors.black),
-                    ],
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8F8F8),
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Search destination',
+                          style: TextStyle(color: Colors.grey.shade400, fontSize: 16),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.search, color: Colors.black),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -130,14 +153,24 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 const SizedBox(height: 16),
                 SizedBox(
                   height: 50,
-                  child: ListView(
+                  child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      _buildCategoryItem('🏝️', 'Beach', isSelected: true),
-                      _buildCategoryItem('🗻', 'Mountain'),
-                      _buildCategoryItem('🌲', 'Forest'),
-                      _buildCategoryItem('🌊', 'Ocean'),
-                    ],
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: _categories.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedCategoryIndex = index;
+                          });
+                        },
+                        child: _buildCategoryItem(
+                          _categories[index]['icon']!,
+                          _categories[index]['label']!,
+                          isSelected: _selectedCategoryIndex == index,
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -216,9 +249,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       margin: const EdgeInsets.only(right: 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isSelected ? const Color(0xFFFCD240) : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade100),
+        border: isSelected ? null : Border.all(color: Colors.grey.shade200),
       ),
       child: Row(
         children: [
@@ -226,7 +259,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
           const SizedBox(width: 8),
           Text(
             label,
-            style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
+            style: TextStyle(
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w600, 
+              color: isSelected ? Colors.black : Colors.grey.shade800,
+            ),
           ),
         ],
       ),
@@ -239,7 +275,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailPage(
+            builder: (context) => PlaceCoverScreen(
               name: name,
               location: location,
               rating: rating,
@@ -328,7 +364,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailPage(
+            builder: (context) => PlaceCoverScreen(
               name: name,
               location: 'Indonesia',
               rating: rating,
