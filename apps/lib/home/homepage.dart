@@ -5,6 +5,7 @@ import 'listTrip/myTrip.dart';
 import 'whishlist/wishList.dart';
 import 'profile/profile.dart';
 import 'details/placeCover.dart';
+import 'notification/notif.dart';
 import 'search/search.dart';
 
 class HomepageScreen extends StatefulWidget {
@@ -20,12 +21,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
   String _userName = "Traveler";
 
   int _selectedCategoryIndex = 0;
-  final List<Map<String, String>> _categories = [
-    {'icon': '❤️', 'label': 'All'},
-    {'icon': '🏝️', 'label': 'Beach'},
-    {'icon': '🗻', 'label': 'Mountain'},
-    {'icon': '🌲', 'label': 'Forest'},
-    {'icon': '🌊', 'label': 'Ocean'},
+  final List<String> _categories = [
+    'All',
+    'Beach',
+    'Mountain',
+    'Forest',
+    'Ocean',
   ];
 
   @override
@@ -81,22 +82,37 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         ),
                       ],
                     ),
-                    Stack(
-                      children: [
-                        const Icon(Icons.notifications_none_rounded, size: 28),
-                        Positioned(
-                          right: 4,
-                          top: 4,
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: Colors.redAccent,
-                              shape: BoxShape.circle,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                        );
+                      },
+                      child: Stack(
+                        children: [
+                          const Icon(Icons.notifications_none_rounded, size: 28),
+                          Positioned(
+                            right: 4,
+                            top: 4,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.redAccent,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Text(
+                                '3',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -165,8 +181,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           });
                         },
                         child: _buildCategoryItem(
-                          _categories[index]['icon']!,
-                          _categories[index]['label']!,
+                          _categories[index],
                           isSelected: _selectedCategoryIndex == index,
                         ),
                       );
@@ -244,27 +259,23 @@ class _HomepageScreenState extends State<HomepageScreen> {
     );
   }
 
-  Widget _buildCategoryItem(String icon, String label, {bool isSelected = false}) {
+  Widget _buildCategoryItem(String label, {bool isSelected = false}) {
     return Container(
       margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       decoration: BoxDecoration(
         color: isSelected ? const Color(0xFFFCD240) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: isSelected ? null : Border.all(color: Colors.grey.shade200),
       ),
-      child: Row(
-        children: [
-          Text(icon, style: const TextStyle(fontSize: 18)),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.w600, 
-              color: isSelected ? Colors.black : Colors.grey.shade800,
-            ),
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.w600, 
+            color: isSelected ? Colors.black : Colors.grey.shade800,
           ),
-        ],
+        ),
       ),
     );
   }
