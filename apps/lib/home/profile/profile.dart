@@ -25,14 +25,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserData();
   }
 
-  void _loadUserData() {
+  Future<void> _loadUserData() async {
     final user = Supabase.instance.client.auth.currentUser;
     if (user != null) {
+      // Set initial data from metadata/auth for immediate feedback
       setState(() {
-        _userName = user.userMetadata?['first_name'] ?? "Pristia";
-        // Using email as placeholder for location since location isn't in metadata usually
-        _userEmail = "Semarang, Indonesia"; 
+        _userName = user.userMetadata?['first_name'] ?? "User";
+        _userEmail = user.email ?? "";
       });
+
+      try {
+        // Fetch fresh data from public.users table (synced by trigger)
+        final userData = await Supabase.instance.client
+            .from('users')
+            .select()
+            .eq('id', user.id)
+            .single();
+
+        if (mounted) {
+          setState(() {
+            _userName = userData['name'] ?? _userName;
+            _userEmail = userData['email'] ?? _userEmail;
+          });
+        }
+      } catch (e) {
+        debugPrint('Error loading profile: $e');
+      }
     }
   }
 
@@ -172,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello, $_userName',
+                        _userName,
                         style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),

@@ -112,8 +112,8 @@ class _ForgotPasswordInputEmailScreenState extends State<ForgotPasswordInputEmai
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  hintText: 'prono@gmail.com',
-                  hintStyle: TextStyle(color: Colors.grey.shade400),
+                  hintText: 'Enter your email address',
+                  hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.normal),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

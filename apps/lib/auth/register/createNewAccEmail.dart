@@ -63,8 +63,8 @@ class _CreateNewAccEmailScreenState extends State<CreateNewAccEmailScreen> {
                   labelStyle: const TextStyle(color: Colors.grey),
                   floatingLabelStyle: const TextStyle(color: Color(0xFFFCD240)),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: 'pristia@gmail.com',
-                  hintStyle: const TextStyle(color: Colors.black87),
+                  hintText: 'Enter your email address',
+                  hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.normal),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),

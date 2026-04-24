@@ -62,8 +62,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextField(
                 controller: _firstNameController,
                 decoration: InputDecoration(
-                  hintText: 'Prano',
-                  hintStyle: TextStyle(color: Colors.grey.shade400),
+                  hintText: 'Enter your first name',
+                  hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.normal),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -90,8 +90,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextField(
                 controller: _lastNameController,
                 decoration: InputDecoration(
-                  hintText: 'Cende',
-                  hintStyle: TextStyle(color: Colors.grey.shade400),
+                  hintText: 'Enter your last name',
+                  hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.normal),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

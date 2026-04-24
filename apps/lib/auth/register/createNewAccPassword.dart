@@ -126,8 +126,8 @@ class _CreateNewAccPasswordScreenState extends State<CreateNewAccPasswordScreen>
                   labelStyle: const TextStyle(color: Colors.grey),
                   floatingLabelStyle: const TextStyle(color: Color(0xFFFCD240)),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  hintText: '••••••••••••',
-                  hintStyle: const TextStyle(color: Colors.black87),
+                  hintText: 'Min. 8 characters',
+                  hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.normal, letterSpacing: 0),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),

@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 autofillHints: const [AutofillHints.email],
                 style: const TextStyle(fontWeight: FontWeight.w600),
                 decoration: _buildInputDecoration(
-                  hint: 'example@gmail.com',
+                  hint: 'Enter your email',
                   prefixIcon: Icons.email_outlined,
                 ),
               ),
@@ -178,9 +178,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 textInputAction: TextInputAction.done,
                 autofillHints: const [AutofillHints.password],
                 onSubmitted: (_) => _signIn(),
-                style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 2.0),
+                style: const TextStyle(fontWeight: FontWeight.w600),
                 decoration: _buildInputDecoration(
-                  hint: '••••••••••••',
+                  hint: 'Enter your password',
                   prefixIcon: Icons.lock_outline_rounded,
                   suffix: IconButton(
                     icon: Icon(
@@ -315,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
       hintText: hint,
       prefixIcon: Icon(prefixIcon, size: 20, color: Colors.grey.shade400),
       suffixIcon: suffix,
-      hintStyle: TextStyle(color: Colors.grey.shade300, fontWeight: FontWeight.normal),
+      hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.normal, letterSpacing: 0),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       filled: true,
       fillColor: const Color(0xFFF9F9F9),
