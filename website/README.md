@@ -1,7 +1,7 @@
-# DTravel Admin Dashboard - Documentation
+# D-Travel Admin Dashboard - Documentation
 
 ## 🖥️ Overview
-The **DTravel Admin Dashboard** is a web-based management platform built to oversee the DTravel travel ecosystem. It allows administrators to manage destinations, monitor user activity, and maintain the content featured on the mobile application.
+The **D-Travel Admin Dashboard** is a web-based management platform built to oversee the D-Travel travel ecosystem. It allows administrators to manage destinations, monitor user activity, and maintain the content featured on the mobile application.
 
 ---
 
@@ -15,7 +15,7 @@ The **DTravel Admin Dashboard** is a web-based management platform built to over
 
 ### 🖼️ Asset Management
 - **Image Uploads**: Streamlined process for managing destination banners and gallery photos.
-- **Visual Branding**: Cohesive use of the DTravel yellow branding across the UI.
+- **Visual Branding**: Cohesive use of the D-Travel yellow branding across the UI.
 
 ### 📊 Administrative Controls
 - **User Overview**: Monitor active travelers and their booking status.
@@ -24,7 +24,7 @@ The **DTravel Admin Dashboard** is a web-based management platform built to over
 ---
 
 ## 🎨 Professional Rebranding
-- **Terminology**: Switched from generic or old naming (e.g., "Dezaa") to professional "DTravel" branding.
+- **Terminology**: Switched from generic or old naming (e.g., "Dezaa") to professional "D-Travel" branding.
 - **Theme**: Consistent Yellow (`#FCD240`), Deep Black, and Modern White aesthetic.
 - **UI Components**: High-quality modular components for Settings, Security, and Team management.
 
@@ -60,4 +60,4 @@ src/
 ---
 
 ## 📝 Authors
-Admin Management System for DTravel Explorers.
+Admin Management System for D-Travel Explorers.

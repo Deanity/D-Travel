@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  MapPin, 
-  Tags, 
-  CalendarCheck, 
-  Users, 
-  Star, 
+import {
+  LayoutDashboard,
+  MapPin,
+  Tags,
+  CalendarCheck,
+  Users,
+  Star,
   LogOut,
   Menu,
   X,
@@ -42,7 +42,7 @@ export const Sidebar = ({ className }: { className?: string }) => {
         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
           <Plane className="w-5 h-5" />
         </div>
-        <span className="font-bold text-xl tracking-tight">DTravel</span>
+        <span className="font-bold text-xl tracking-tight">D-Travel</span>
       </div>
 
       <nav className="flex-1 px-4 space-y-1">
@@ -52,8 +52,8 @@ export const Sidebar = ({ className }: { className?: string }) => {
             to={item.href}
             className={({ isActive }) => cn(
               "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-              isActive 
-                ? "bg-primary text-primary-foreground" 
+              isActive
+                ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )}
           >
@@ -64,8 +64,8 @@ export const Sidebar = ({ className }: { className?: string }) => {
       </nav>
 
       <div className="p-4 border-t">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive"
           onClick={handleSignOut}
         >
@@ -104,7 +104,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
               )}
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4">
             {/* Dark mode toggle could go here */}
           </div>

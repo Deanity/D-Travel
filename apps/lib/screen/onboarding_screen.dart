@@ -35,7 +35,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       clipBehavior: Clip.none,
       children: [
         const Text(
-          'DTravel',
+          'D-Travel',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w900,
@@ -45,7 +45,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         Positioned(
           top: 2,
-          left: 50, // Menyesuaikan letak titik dengan panjang DTravel
+          left: 50, // Menyesuaikan letak titik dengan panjang D-Travel
           child: Container(
             width: 7,
             height: 7,

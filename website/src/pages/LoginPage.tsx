@@ -74,20 +74,20 @@ export const LoginPage = () => {
     <div className="min-h-screen flex flex-col md:flex-row bg-background">
       {/* Left side: Premium Branding */}
       <div className="hidden md:flex flex-1 relative bg-zinc-950 overflow-hidden items-center justify-center">
-        <div 
-          className="absolute inset-0 opacity-[0.03]" 
-          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} 
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }}
         />
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/30 via-transparent to-transparent opacity-80" />
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px]" />
-        
+
         <div className="relative z-10 text-center space-y-8 max-w-lg px-8">
           <div className="w-24 h-24 bg-primary rounded-3xl flex items-center justify-center mx-auto shadow-[0_0_60px_-15px_rgba(255,184,0,0.5)] animate-in zoom-in duration-1000">
             <Plane className="w-12 h-12 text-primary-foreground" />
           </div>
           <div className="space-y-4 animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-150">
             <h1 className="text-5xl text-white font-extrabold tracking-tight">
-              DTravel <span className="text-primary">Admin</span>
+              D-Travel <span className="text-primary">Admin</span>
             </h1>
             <p className="text-zinc-400 text-lg leading-relaxed">
               Pusat kendali eksekutif untuk manajemen destinasi, pemesanan, dan pelanggan.
@@ -107,7 +107,7 @@ export const LoginPage = () => {
             <p className="text-muted-foreground mt-2 text-sm md:text-base">
               Masukkan kredensial Anda untuk mengakses dasbor.
             </p>
-            
+
             {!isSupabaseConfigured && (
               <div className="mt-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-sm flex gap-3 animate-in fade-in slide-in-from-top-4 duration-500">
                 <Info className="w-5 h-5 shrink-0 text-amber-500" />
@@ -153,15 +153,15 @@ export const LoginPage = () => {
               </div>
             </div>
 
-            <Button 
-              className="w-full h-12 rounded-xl font-bold text-base shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-[0.98]" 
-              type="submit" 
+            <Button
+              className="w-full h-12 rounded-xl font-bold text-base shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-[0.98]"
+              type="submit"
               disabled={loading}
             >
               {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
               Sign In
             </Button>
-            
+
             <div className="relative w-full my-8">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-border" />

@@ -27,7 +27,7 @@ class _SplashScreen1State extends State<SplashScreen1> {
       clipBehavior: Clip.none,
       children: [
         const Text(
-          'DTravel',
+          'D-Travel',
           style: TextStyle(
             fontSize: 48,
             fontWeight: FontWeight.w900,
@@ -37,7 +37,7 @@ class _SplashScreen1State extends State<SplashScreen1> {
         ),
         Positioned(
           top: 6,
-          left: 86, // Disesuaikan sedikit lebih ke kanan untuk teks DTravel
+          left: 86, // Disesuaikan sedikit lebih ke kanan untuk teks D-Travel
           child: Container(
             width: 10,
             height: 10,

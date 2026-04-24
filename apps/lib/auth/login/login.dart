@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
       clipBehavior: Clip.none,
       children: [
         const Text(
-          'DTravel',
+          'D-Travel',
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.w900,
