@@ -4,6 +4,7 @@ import '../homepage.dart';
 import '../listTrip/myTrip.dart';
 import '../whishlist/wishList.dart';
 import '../../auth/login/login.dart';
+import '../notification/notif.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,8 +14,10 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String _userName = "Traveler";
-  String _userEmail = "";
+  String _userName = "Pristia";
+  String _userEmail = "Semarang, Indonesia";
+  bool _isLoggingOut = false;
+  bool _isDarkMode = false;
 
   @override
   void initState() {
@@ -26,101 +29,196 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = Supabase.instance.client.auth.currentUser;
     if (user != null) {
       setState(() {
-        _userName = user.userMetadata?['first_name'] ?? "Traveler";
-        _userEmail = user.email ?? "";
+        _userName = user.userMetadata?['first_name'] ?? "Pristia";
+        // Using email as placeholder for location since location isn't in metadata usually
+        _userEmail = "Semarang, Indonesia"; 
       });
     }
   }
 
   Future<void> _handleLogout() async {
-    await Supabase.instance.client.auth.signOut();
-    if (mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (route) => false,
-      );
+    setState(() => _isLoggingOut = true);
+    try {
+      await Supabase.instance.client.auth.signOut();
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to logout. Please try again.')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoggingOut = false);
+      }
     }
+  }
+
+  void _showLogoutConfirmation() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Logout',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 16, height: 1.5),
+                children: [
+                  const TextSpan(text: 'Are you sure you want to log out of '),
+                  TextSpan(
+                    text: '$_userName\'s ',
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                  const TextSpan(text: 'account?'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _handleLogout();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      side: BorderSide(color: Colors.grey.shade200),
+                    ),
+                    child: const Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFCD240),
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFBFBFB),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 48),
-              // Profile Image
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xFFFCD240), width: 3),
-                        image: const DecorationImage(
-                          image: NetworkImage('https://i.pravatar.cc/150?u=pristia'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFFCD240),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.edit, size: 18, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                _userName,
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                _userEmail,
-                style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
+              const SizedBox(height: 32),
+              const Text(
+                'Your Profile',
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 32),
+              // Profile Header
+              Row(
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: NetworkImage('https://i.pravatar.cc/150?u=pristia'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hello, $_userName',
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _userEmail,
+                        style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
 
               // Menu Options
-              _buildProfileOption(Icons.person_outline, "Edit Profile"),
-              _buildProfileOption(Icons.notifications_none, "Notifications"),
-              _buildProfileOption(Icons.security, "Security"),
-              _buildProfileOption(Icons.language, "Language"),
-              _buildProfileOption(Icons.help_outline, "Help Center"),
-              
-              const SizedBox(height: 32),
-              // Logout Button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: _handleLogout,
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.redAccent),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  ),
-                  child: const Text(
-                    'Logout',
-                    style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
+              _buildMenuCard(
+                title: "Personal Information",
+                icon: Icons.person_pin_outlined,
               ),
-              const SizedBox(height: 100),
+              _buildMenuCard(
+                title: "Notification",
+                icon: Icons.notifications_none_outlined,
+                hasBadge: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                  );
+                },
+              ),
+              _buildMenuCard(
+                title: "FAQ",
+                icon: Icons.chat_bubble_outline_rounded,
+              ),
+              _buildMenuCard(
+                title: "Language",
+                icon: Icons.language_rounded,
+              ),
+              const SizedBox(height: 60),
+              // Logout Button separated
+              _buildMenuCard(
+                title: "Logout",
+                onTap: _showLogoutConfirmation,
+                isLogout: true,
+                icon: Icons.logout_rounded,
+              ),
+              const SizedBox(height: 32),
             ],
           ),
         ),
@@ -129,26 +227,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileOption(IconData icon, String title) {
+  Widget _buildMenuCard({
+    required String title,
+    IconData? icon,
+    Widget? trailing,
+    VoidCallback? onTap,
+    bool hasBadge = false,
+    bool isLogout = false,
+  }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey.shade100),
-          ),
-          child: Row(
-            children: [
-              Icon(icon, color: Colors.grey.shade600),
-              const SizedBox(width: 16),
-              Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-              const Spacer(),
-              Icon(Icons.chevron_right, color: Colors.grey.shade400),
-            ],
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          child: InkWell(
+            onTap: onTap ?? () {},
+            borderRadius: BorderRadius.circular(24),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: isLogout ? Colors.redAccent.withOpacity(0.1) : Colors.grey.shade100),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isLogout ? Colors.redAccent : Colors.black,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (trailing != null)
+                    trailing
+                  else if (icon != null)
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Icon(icon, color: isLogout ? Colors.redAccent : Colors.black, size: 24),
+                        if (hasBadge)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFE85D25),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -184,7 +331,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               );
             },
-            child: Icon(Icons.home_outlined, color: Colors.grey.shade400, size: 26),
+            child: Icon(Icons.home_outlined, color: Colors.grey.shade900, size: 26),
           ),
           GestureDetector(
             onTap: () {
@@ -198,7 +345,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               );
             },
-            child: Icon(Icons.near_me_outlined, color: Colors.grey.shade400, size: 26),
+            child: Icon(Icons.near_me_outlined, color: Colors.grey.shade900, size: 26),
           ),
           GestureDetector(
             onTap: () {
@@ -212,7 +359,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               );
             },
-            child: Icon(Icons.favorite_border_rounded, color: Colors.grey.shade400, size: 26),
+            child: Icon(Icons.favorite_border_rounded, color: Colors.grey.shade900, size: 26),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -222,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             child: const Row(
               children: [
-                Icon(Icons.person, color: Colors.white, size: 18),
+                Icon(Icons.person_outline_rounded, color: Colors.white, size: 18),
                 SizedBox(width: 8),
                 Text(
                   'Profile',
