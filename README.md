@@ -15,6 +15,9 @@
   <img alt="Supabase" src="https://img.shields.io/badge/Supabase-2.x-3ECF8E?logo=supabase"/>
   <img alt="Platform" src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-lightgrey"/>
   <img alt="Version" src="https://img.shields.io/badge/Version-1.0.0-yellow"/>
+  <a href="https://github.com/Deanity/Traver">
+    <img alt="GitHub" src="https://img.shields.io/badge/GitHub-Deanity%2FTraver-181717?logo=github"/>
+  </a>
 </p>
 
 ---
@@ -163,8 +166,8 @@ DTravel/
 
 **1. Clone repository**
 ```bash
-git clone <repository-url>
-cd DTravel/apps
+git clone https://github.com/Deanity/Traver.git
+cd Traver/apps
 ```
 
 **2. Install dependencies**
