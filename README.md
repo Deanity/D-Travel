@@ -24,65 +24,65 @@
 
 ## 📖 Overview
 
-**Traver** adalah aplikasi travel mobile premium yang memungkinkan pengguna untuk menemukan, merencanakan, dan memesan perjalanan impian mereka. Aplikasi ini dibangun dengan **Flutter** untuk tampilan lintas platform yang konsisten, dan menggunakan **Supabase** sebagai backend untuk autentikasi dan manajemen data pengguna.
+**Traver** is a premium mobile travel application that allows users to discover, plan, and book their dream vacations. Built with **Flutter** for a consistent cross-platform experience and powered by **Supabase** as the backend for authentication and user data management.
 
 ---
 
-## ✨ Fitur Utama
+## ✨ Key Features
 
-### 🔐 Autentikasi & Onboarding
-- **Splash Screen** — Transisi animasi halus ke layar onboarding.
-- **Onboarding Immersif** — 3 slide dengan gambar lokal penuh layar (Mountain, Jungle, Beach) dan deskripsi singkat.
-- **Registrasi Multi-langkah**:
-  1. Input nama lengkap
-  2. Input alamat email
-  3. Input & konfirmasi password
-  4. Verifikasi OTP 8-digit (via email Supabase)
-  5. Pemilihan kategori eksplorasi favorit (Beach, Mountain, dll.)
-  6. Layar sukses pembuatan akun
-- **Login** — Autentikasi via email & password menggunakan Supabase Auth.
-- **Logout** — Konfirmasi logout dengan modal bottom sheet.
+### 🔐 Authentication & Onboarding
+- **Splash Screen** — Smooth animated transition to the onboarding flow.
+- **Immersive Onboarding** — 3 full-screen slides with local images (Mountain, Jungle, Beach) and brief descriptions.
+- **Multi-Step Registration**:
+  1. Enter full name
+  2. Enter email address
+  3. Set & confirm password
+  4. 8-digit OTP verification (via Supabase email)
+  5. Select favorite exploration categories (Beach, Mountain, etc.)
+  6. Account creation success screen
+- **Login** — Authentication via email & password using Supabase Auth.
+- **Logout** — Confirmation via modal bottom sheet.
 
-### 🏠 Halaman Utama (Homepage)
-- **Greeting personal** berdasarkan nama pengguna dari database.
-- **Foto profil pengguna** dari aset lokal.
-- **Category Filter Bar** — Filter destinasi berdasarkan kategori (Beach, Forest, Ocean, dsb.).
-- **Favorite Places** — Tampilan horizontal scroll dengan gambar lokal (Kuta Beach, Bromo Mountain).
-- **Popular Packages** — Daftar paket wisata populer (Kuta Resort, Jepara Resort).
+### 🏠 Homepage
+- **Personalized greeting** based on the user's name from the database.
+- **User profile picture** from local assets.
+- **Category Filter Bar** — Filter destinations by type (Beach, Forest, Ocean, etc.).
+- **Favorite Places** — Horizontal scroll with local images (Kuta Beach, Bromo Mountain).
+- **Popular Packages** — List of popular travel packages (Kuta Resort, Jepara Resort).
 
-### 📍 Detail Destinasi (`placeCover.dart`)
-- **Slideshow Foto** — Auto-scroll 3 gambar Showcase dengan `PageView` dan indikator halaman.
-- **Informasi Destinasi** — Nama, lokasi, rating, harga, dan deskripsi lengkap.
-- **What's Included** — Chip indikator paket (Flight, Hotel, Transport).
-- **Gallery Photos** — Grid 3 foto lokal dengan overlay counter "+20".
-- **Peta Lokasi** — Gambar peta statis (`DummyMaps.png`) dengan ikon pin dan kontrol zoom dekoratif.
-- **Review & Rating** — Daftar ulasan pengguna dengan avatar, nama, tanggal, dan bintang.
+### 📍 Destination Detail (`placeCover.dart`)
+- **Photo Slideshow** — Auto-scrolling 3-image Showcase with `PageView` and page indicator.
+- **Destination Info** — Name, location, rating, price, and full description.
+- **What's Included** — Package indicator chips (Flight, Hotel, Transport).
+- **Gallery Photos** — 3-image local grid with "+20" overlay counter.
+- **Location Map** — Static map image (`DummyMaps.png`) with decorative pin icon and zoom controls.
+- **Reviews & Ratings** — User review list with avatar, name, date, and star rating.
 
-### 🗓️ Alur Booking
-- **Date Picker** — Modal bottom sheet `BookingDatePicker` untuk memilih tanggal check-in dan check-out.
-- **Detail Booking** — Form pengisian data pemesan (Nama, Kontak, ID Card, jumlah member).
-- **Payment Method** — Pilihan metode pembayaran.
-- **Confirmation** — Ringkasan transaksi sebelum konfirmasi.
-- **Success Screen** — Layar konfirmasi booking berhasil.
+### 🗓️ Booking Flow
+- **Date Picker** — `BookingDatePicker` modal bottom sheet for selecting check-in and check-out dates.
+- **Booking Detail** — Form to fill in traveler information (Name, Contact, ID Card, number of members).
+- **Payment Method** — Selection of available payment methods.
+- **Confirmation** — Transaction summary before final confirmation.
+- **Success Screen** — Booking confirmation screen.
 
 ### 💛 Wishlist
-- Menyimpan destinasi favorit dengan tampilan kartu bergambar.
-- Data lokal menggunakan gambar aset (`KutaResort`, `JeparaResort`, `BromoMountain`).
+- Save favorite destinations with an image card layout.
+- Local data using asset images (`KutaResort`, `JeparaResort`, `BromoMountain`).
 
 ### 🧳 My Trip
-- Manajemen perjalanan yang sudah dipesan (Upcoming & History).
+- Manage booked trips (Upcoming & History).
 
-### 👤 Profil
-- Menampilkan data pengguna yang diambil dari tabel `users` di Supabase.
-- Foto profil dari aset lokal (`pfp.png`).
+### 👤 Profile
+- Displays user data fetched from the `users` table in Supabase.
+- Profile picture from local assets (`pfp.png`).
 - Menu: Personal Information, Notification, FAQ, Language, Logout.
 
-### 🔔 Notifikasi
-- Layar notifikasi perjalanan dan promosi.
+### 🔔 Notifications
+- Screen for trip notifications and promotions.
 
 ---
 
-## 🗂️ Struktur Proyek
+## 🗂️ Project Structure
 
 ```
 DTravel/
@@ -128,14 +128,14 @@ DTravel/
     │       ├── detailPage/        # Showcase1, Showcase2, Showcase3
     │       │   └── gallery/       # image1, image2, image3
     │       ├── profile/           # pfp.png
-    │       └── DummyMaps.png      # Map placeholder
+    │       └── DummyMaps.png      # Static map placeholder
     ├── assets/
     │   └── images/
     │       └── Traver.png         # App logo / launcher icon
     ├── android/                   # Android native config (label: "Traver")
     ├── ios/                       # iOS native config (CFBundleName: "Traver")
-    ├── .env                       # Supabase credentials (tidak di-commit)
-    ├── .env.example               # Template env
+    ├── .env                       # Supabase credentials (not committed)
+    ├── .env.example               # Environment template
     └── pubspec.yaml               # Dependencies & assets config
 ```
 
@@ -143,28 +143,28 @@ DTravel/
 
 ## 🔧 Tech Stack & Dependencies
 
-| Package | Versi | Kegunaan |
+| Package | Version | Purpose |
 |---|---|---|
-| `flutter` | SDK | Framework UI lintas platform |
+| `flutter` | SDK | Cross-platform UI framework |
 | `supabase_flutter` | ^2.12.2 | Backend: Auth, Database (PostgreSQL) |
-| `flutter_dotenv` | ^6.0.0 | Manajemen environment variables |
-| `shared_preferences` | ^2.5.5 | Penyimpanan data lokal |
-| `google_fonts` | ^6.2.1 | Tipografi (Inter, dll.) |
-| `flutter_launcher_icons` | ^0.13.1 | Generator ikon aplikasi |
+| `flutter_dotenv` | ^6.0.0 | Environment variable management |
+| `shared_preferences` | ^2.5.5 | Local data storage |
+| `google_fonts` | ^6.2.1 | Typography (Inter, etc.) |
+| `flutter_launcher_icons` | ^0.13.1 | App launcher icon generator |
 
 ---
 
-## ⚙️ Setup & Cara Menjalankan
+## ⚙️ Setup & Installation
 
-### Prasyarat
-- Flutter SDK `^3.x` sudah terinstall
+### Prerequisites
+- Flutter SDK `^3.x` installed
 - Dart SDK `^3.11.1`
-- Akun [Supabase](https://supabase.com)
-- Android Studio / Xcode (untuk emulator)
+- A [Supabase](https://supabase.com) account
+- Android Studio / Xcode (for emulator/simulator)
 
-### Langkah Instalasi
+### Installation Steps
 
-**1. Clone repository**
+**1. Clone the repository**
 ```bash
 git clone https://github.com/Deanity/Traver.git
 cd Traver/apps
@@ -175,9 +175,9 @@ cd Traver/apps
 flutter pub get
 ```
 
-**3. Konfigurasi environment**
+**3. Configure environment variables**
 
-Salin file `.env.example` menjadi `.env` dan isi dengan credentials Supabase Anda:
+Copy `.env.example` to `.env` and fill in your Supabase credentials:
 ```bash
 cp .env.example .env
 ```
@@ -186,12 +186,12 @@ VITE_SUPABASE_URL=https://<your-project-ref>.supabase.co
 VITE_SUPABASE_ANON_KEY=<your-anon-key>
 ```
 
-**4. Jalankan aplikasi**
+**4. Run the app**
 ```bash
 flutter run
 ```
 
-### Generate Launcher Icon (opsional)
+### Generate Launcher Icon (optional)
 ```bash
 dart run flutter_launcher_icons
 ```
@@ -200,62 +200,62 @@ dart run flutter_launcher_icons
 
 ## 🗄️ Supabase Schema
 
-Aplikasi menggunakan tabel `users` di schema `public` dengan kolom berikut:
+The app uses a `users` table in the `public` schema with the following columns:
 
-| Kolom | Tipe | Keterangan |
+| Column | Type | Description |
 |---|---|---|
-| `id` | `uuid` | Primary key, referensi ke `auth.users` |
-| `name` | `text` | Nama lengkap pengguna |
-| `email` | `text` | Alamat email |
-| `role` | `text` | Role pengguna (default: `user`) |
-| `created_at` | `timestamptz` | Waktu pembuatan akun |
+| `id` | `uuid` | Primary key, references `auth.users` |
+| `name` | `text` | User's full name |
+| `email` | `text` | Email address |
+| `role` | `text` | User role (default: `user`) |
+| `created_at` | `timestamptz` | Account creation timestamp |
 
-> **Trigger**: Sebuah database trigger pada tabel `auth.users` secara otomatis mengisi tabel `public.users` saat pengguna baru mendaftar.
+> **Trigger**: A database trigger on `auth.users` automatically populates `public.users` when a new user registers.
 
 ---
 
 ## 🎨 Design System
 
-| Elemen | Nilai |
+| Element | Value |
 |---|---|
-| **Primary Color** | `#FCD240` (Kuning Traver) |
+| **Primary Color** | `#FCD240` (Traver Yellow) |
 | **Background** | `#FFFFFF` / `#FBFBFB` |
 | **Font** | Inter (Google Fonts) |
 | **Corner Radius** | 16px – 24px |
-| **Tema** | Material 3 (Light) |
+| **Theme** | Material 3 (Light) |
 
 ---
 
-## 📱 Tampilan Aplikasi
+## 📱 App Screens
 
-| Layar | Deskripsi |
+| Screen | Description |
 |---|---|
-| Splash Screen | Logo animasi dengan transisi ke onboarding |
-| Onboarding | 3 slide gambar penuh (Mountain, Jungle, Beach) |
-| Login | Form email & password |
-| Register | Alur 6 langkah (Nama → Email → Password → OTP → Favorit → Sukses) |
+| Splash Screen | Animated logo with transition to onboarding |
+| Onboarding | 3 full-screen slides (Mountain, Jungle, Beach) |
+| Login | Email & password form |
+| Register | 6-step flow (Name → Email → Password → OTP → Favorites → Success) |
 | Homepage | Greeting, Favorite Places, Popular Packages |
-| Search | Filter kategori + daftar hasil pencarian |
-| Detail Destinasi | Slideshow, info, galeri, peta, review |
-| Booking | Date picker → Form detail → Pembayaran → Konfirmasi |
-| Wishlist | Daftar destinasi favorit tersimpan |
-| My Trip | Riwayat dan tiket perjalanan |
-| Profile | Data akun + menu pengaturan |
+| Search | Category filter + search results list |
+| Destination Detail | Slideshow, info, gallery, map, reviews |
+| Booking | Date picker → Detail form → Payment → Confirmation |
+| Wishlist | Saved favorite destinations |
+| My Trip | Trip history and upcoming tickets |
+| Profile | Account info + settings menu |
 
 ---
 
-## 🚧 Catatan Pengembangan
+## 🚧 Development Notes
 
-- File `.env` **tidak boleh di-commit** ke repository. Pastikan sudah tercantum di `.gitignore`.
-- Setelah menambahkan aset baru, selalu daftarkan foldernya di `pubspec.yaml` di bawah bagian `flutter > assets`.
-- Setelah mengubah path gambar (dari network ke asset), lakukan **Hot Restart** (bukan Hot Reload) agar perubahan aset terbaca dengan benar oleh Flutter.
-- Navigasi antar tab utama (Home, Trip, Wishlist, Profile) menggunakan `Navigator.pushReplacement` dengan `FadeTransition` untuk pengalaman yang lebih halus.
+- The `.env` file **must not be committed** to the repository. Make sure it is listed in `.gitignore`.
+- After adding new assets, always register the folder in `pubspec.yaml` under the `flutter > assets` section.
+- After changing image paths (from network to asset), perform a **Hot Restart** (not Hot Reload) so Flutter correctly picks up the new assets.
+- Navigation between main tabs (Home, Trip, Wishlist, Profile) uses `Navigator.pushReplacement` with `FadeTransition` for a smoother experience.
 
 ---
 
 ## 👤 Developer
 
-Dikembangkan sebagai bagian dari project **Traver** — sebuah aplikasi travel mobile premium berbasis Flutter.
+Developed as part of the **Traver** project — a premium mobile travel application built with Flutter.
 
 <p>
   <a href="https://www.instagram.com/shoyou.nt/?hl=id">
@@ -267,7 +267,7 @@ Dikembangkan sebagai bagian dari project **Traver** — sebuah aplikasi travel m
 
 ## 🎨 Design Credits
 
-UI/UX design terinspirasi dan bersumber dari karya **Pickolab** — studio desain kreatif yang berfokus pada UI Kit dan template premium untuk aplikasi mobile.
+UI/UX design inspired by and sourced from **Pickolab** — a creative design studio specializing in premium UI Kits and templates for mobile applications.
 
 <p>
   <a href="https://www.instagram.com/pickolab/?hl=id">
@@ -277,4 +277,4 @@ UI/UX design terinspirasi dan bersumber dari karya **Pickolab** — studio desai
 
 ---
 
-*Versi 1.0.0 — Traver Mobile App*
+*Version 1.0.0 — Traver Mobile App*
