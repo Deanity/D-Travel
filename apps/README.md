@@ -1,7 +1,7 @@
-# D-Travel Mobile App - Documentation
+# Traver Mobile App - Documentation
 
-## ✈️ About D-Travel
-**D-Travel** is a premium mobile travel application designed to provide users with a seamless experience in discovering, planning, and booking their dream vacations. Built with **Flutter** and **Supabase**, this app combines a stunning modern aesthetic with robust backend functionality.
+## ✈️ About Traver
+**Traver** is a premium mobile travel application designed to provide users with a seamless experience in discovering, planning, and booking their dream vacations. Built with **Flutter** and **Supabase**, this app combines a stunning modern aesthetic with robust backend functionality.
 
 ---
 
@@ -32,7 +32,7 @@
 ---
 
 ## 🎨 Design System
-- **Primary Color**: `#FCD240` (D-Travel Yellow) - Representing energy and warmth.
+- **Primary Color**: `#FCD240` (Traver Yellow) - Representing energy and warmth.
 - **Secondary Colors**: Pure Black and Clean White for a premium high-contrast look.
 - **Typography**: Modern, bold headlines with clean sans-serif body text.
 - **Transitions**: Smooth fade and slide transitions between screens for a liquid UI feel.

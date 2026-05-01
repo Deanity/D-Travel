@@ -1,11 +1,11 @@
-# D-Travell - Complete Travel Ecosystem
+# Traverl - Complete Travel Ecosystem
 
-Welcome to the **D-Travell** project, an integrated travel platform featuring a premium mobile application for travelers and a robust admin dashboard for platform management.
+Welcome to the **Traverl** project, an integrated travel platform featuring a premium mobile application for travelers and a robust admin dashboard for platform management.
 
 ---
 
 ## 🏗️ Project Architecture
-D-Travell is divided into two main components that communicate through a unified backend:
+Traverl is divided into two main components that communicate through a unified backend:
 
 ### 📱 [Mobile Application](./apps)
 The traveler-facing side of the ecosystem. Built with **Flutter**, it provides a high-end experience for discovering destinations, booking trips, and managing travel itineraries.
@@ -14,7 +14,7 @@ The traveler-facing side of the ecosystem. Built with **Flutter**, it provides a
 - **Key Features**: Personalization, Immersive Detail Pages, OTP Recovery, Wishlist.
 
 ### 🖥️ [Admin Dashboard](./website)
-The administrative side of the ecosystem. Built with **React and TypeScript**, it allows the D-Travell team to manage content, monitor destinations, and oversee user activity.
+The administrative side of the ecosystem. Built with **React and TypeScript**, it allows the Traverl team to manage content, monitor destinations, and oversee user activity.
 - **Location**: `/website`
 - **Primary Tech**: React (Vite), Tailwind CSS, Supabase Database.
 - **Key Features**: Destination CRUD, Image Management, User Analytics.
@@ -31,7 +31,7 @@ Both platforms share a single **Supabase** instance, ensuring:
 
 ## 📂 Repository Structure
 ```text
-D-Travel/
+Traver/
 ├── apps/               # Flutter Mobile Project (Traveler Client)
 │   └── README.md       # Mobile-specific documentation
 ├── website/            # React Web Project (Admin Dashboard)
@@ -66,9 +66,9 @@ D-Travel/
 ---
 
 ## 🎨 Branding & Vision
-D-Travel aims to redefine the travel discovery experience by combining a high-contrast aesthetic (Yellow #FCD240 & Deep Black) with ultra-smooth transitions and intuitive layouts.
+Traver aims to redefine the travel discovery experience by combining a high-contrast aesthetic (Yellow #FCD240 & Deep Black) with ultra-smooth transitions and intuitive layouts.
 
 ---
 
 ## 📝 Authors
-The D-Travel Development Team.
+The Traver Development Team.

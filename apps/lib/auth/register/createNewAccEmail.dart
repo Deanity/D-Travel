@@ -88,7 +88,7 @@ class _CreateNewAccEmailScreenState extends State<CreateNewAccEmailScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      "I'd like to received marketing and policy \ncommunication from D-Travel and its partners.",
+                      "I'd like to received marketing and policy \ncommunication from Traver and its partners.",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey.shade500,

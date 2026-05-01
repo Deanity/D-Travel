@@ -14,17 +14,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> onboardingData = [
     {
-      "image": "https://i.pinimg.com/736x/ca/b2/f1/cab2f1c998bd454613d9b48eed8e70fc.jpg",
+      "image": "lib/assets/loadingScreen/Mountain.jpg",
       "title": "Lets explore\nthe world",
       "subtitle": "let's explore the world with us with just a\nfew clicks"
     },
     {
-      "image": "https://i.pinimg.com/736x/ee/ca/d2/eecad2477524d48452f28c88e0230c61.jpg",
+      "image": "lib/assets/loadingScreen/Jungle.jpg",
       "title": "Visit tourist\nattractions",
       "subtitle": "Find thousands of tourist destinations\nready for you to visit"
     },
     {
-      "image": "https://i.pinimg.com/1200x/08/cc/60/08cc60e6fdaee7f2f7874fb720601eb2.jpg",
+      "image": "lib/assets/loadingScreen/Beach.png",
       "title": "Get ready for\nnext trip",
       "subtitle": "Find thousands of tourist destinations\nready for you to visit"
     },
@@ -35,7 +35,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       clipBehavior: Clip.none,
       children: [
         const Text(
-          'D-Travel',
+          'Traver',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w900,
@@ -45,7 +45,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         Positioned(
           top: 2,
-          left: 50, // Menyesuaikan letak titik dengan panjang D-Travel
+          left: 50, // Menyesuaikan letak titik dengan panjang Traver
           child: Container(
             width: 7,
             height: 7,
@@ -78,18 +78,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               return Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(
+                  Image.asset(
                     onboardingData[index]["image"]!,
                     fit: BoxFit.cover,
-                    // Tambahan loading builder agar smooth saat load gambar
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFFFCD240),
-                        ),
-                      );
-                    },
                   ),
                   // Dark Gradient Overlay untuk teks agar terbaca dengan jelas
                   Container(

@@ -65,6 +65,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - .env
+    - lib/assets/loadingScreen/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -97,6 +98,6 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/D-Travel-v4.png"
+  image_path: "assets/images/Traver.png"
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/images/D-Travel-v4.png"
+  adaptive_icon_foreground: "assets/images/Traver.png"

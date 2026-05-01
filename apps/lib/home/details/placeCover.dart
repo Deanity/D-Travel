@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'bookingDatePicker.dart';
 import '../booking/detailBooking.dart';
-import '../packages/packageList.dart';
+
 
 class PlaceCoverScreen extends StatefulWidget {
   final String name;
@@ -535,16 +535,31 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PackageListScreen(
-                    destinationName: widget.name,
-                    destinationImage: widget.imageUrl,
-                  ),
+            onPressed: () async {
+              final result = await showModalBottomSheet<Map<String, dynamic>>(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.85,
+                  child: const BookingDatePicker(),
                 ),
               );
+              if (result != null && mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailBookingScreen(
+                      bookingData: {
+                        'destinationName': widget.name,
+                        'destinationImage': widget.imageUrl,
+                        'startDate': result['start'],
+                        'endDate': result['end'],
+                      },
+                    ),
+                  ),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFCD240),
@@ -554,7 +569,7 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
                   borderRadius: BorderRadius.circular(16)),
               elevation: 0,
             ),
-            child: const Text('View Packages',
+            child: const Text('Book Now',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           ),
         ],
