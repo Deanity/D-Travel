@@ -12,27 +12,27 @@ class WishListScreen extends StatefulWidget {
 
 class _WishListScreenState extends State<WishListScreen> {
   // Mock data for wishlist
-  final List<Map<String, dynamic>> _wishlistItems = [
+  List<Map<String, dynamic>> get _wishlistItems => [
     {
       'name': 'Kuta Resort',
       'price': '745,00',
       'rating': '4.8',
       'location': 'Bali, Indonesia',
-      'image': 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=400&q=80',
+      'image': 'lib/assets/homePage/KutaResort.png',
     },
     {
       'name': 'Jepara Resort',
       'price': '545,00',
       'rating': '4.8',
       'location': 'Central Java, Indonesia',
-      'image': 'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=400&q=80',
+      'image': 'lib/assets/homePage/JeparaResort.png',
     },
     {
       'name': 'Bromo Mountain',
       'price': '880,00',
       'rating': '4.9',
       'location': 'East Java, Indonesia',
-      'image': 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=400&q=80',
+      'image': 'lib/assets/homePage/BromoMountain.png',
     },
   ];
 
@@ -95,7 +95,7 @@ class _WishListScreenState extends State<WishListScreen> {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                child: Image.network(
+                child: Image.asset(
                   item['image'],
                   height: 180,
                   width: double.infinity,

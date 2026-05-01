@@ -69,7 +69,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       children: [
                         const CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=pristia'),
+                          backgroundImage: AssetImage('lib/assets/profile/pfp.png'),
                         ),
                         const SizedBox(width: 12),
                         Text(
@@ -203,13 +203,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         'Kuta Beach',
                         'Bali, Indonesia',
                         '4.8',
-                        'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&q=80',
+                        'lib/assets/homePage/KutaBeach.png',
                       ),
                       _buildFavoriteCard(
                         'Bromo Mountain',
                         'Jawa Ti, Indonesia',
                         '4.0',
-                        'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=400&q=80',
+                        'lib/assets/homePage/BromoMountain.png',
                       ),
                     ],
                   ),
@@ -224,14 +224,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   '745,00',
                   '4.8',
                   'A resort is a place used for vacation, relaxation or as a day...',
-                  'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=400&q=80',
+                  'lib/assets/homePage/KutaResort.png',
                 ),
                 _buildPackageCard(
                   'Jepara Resort',
                   '545,00',
                   '4.8',
                   'A resort is a place used for vacation, relaxation or as a day...',
-                  'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=400&q=80',
+                  'lib/assets/homePage/JeparaResort.png',
                 ),
                 const SizedBox(height: 100),
               ],
@@ -303,7 +303,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           image: DecorationImage(
-            image: NetworkImage(imageUrl),
+            image: AssetImage(imageUrl),
             fit: BoxFit.cover,
           ),
         ),
@@ -398,7 +398,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(imageUrl, width: 90, height: 90, fit: BoxFit.cover),
+              child: Image.asset(imageUrl, width: 90, height: 90, fit: BoxFit.cover),
             ),
             const SizedBox(width: 16),
             Expanded(

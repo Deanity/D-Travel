@@ -180,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: NetworkImage('https://i.pravatar.cc/150?u=pristia'),
+                        image: AssetImage('lib/assets/profile/pfp.png'),
                         fit: BoxFit.cover,
                       ),
                     ),

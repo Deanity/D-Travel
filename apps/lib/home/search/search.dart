@@ -164,13 +164,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               const SizedBox(height: 20),
-              _buildSearchResultCard('Kuta Beach', 'Bali is an island in Indonesia known for its verdant volcano...', '4,8', 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&q=80', false),
+              _buildSearchResultCard('Kuta Beach', 'Bali is an island in Indonesia known for its verdant volcano...', '4,8', 'lib/assets/homePage/KutaBeach.png', false),
               const SizedBox(height: 16),
-              _buildSearchResultCard('Kuta Resort', 'A resort is a place used for vacation, relaxation or as a day...', '4,8', 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=400&q=80', true),
+              _buildSearchResultCard('Kuta Resort', 'A resort is a place used for vacation, relaxation or as a day...', '4,8', 'lib/assets/homePage/KutaResort.png', true),
               const SizedBox(height: 16),
-              _buildSearchResultCard('Mandalika Resort', 'A resort is a place used for vacation, relaxation or as a day...', '4,8', 'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=400&q=80', true),
+              _buildSearchResultCard('Jepara Resort', 'A resort is a place used for vacation, relaxation or as a day...', '4,8', 'lib/assets/homePage/JeparaResort.png', true),
               const SizedBox(height: 16),
-              _buildSearchResultCard('Jimbaran Beach', 'A resort is a place used for vacation, relaxation or as a day...', '4,8', 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=400&q=80', false),
+              _buildSearchResultCard('Bromo Mountain', 'A mountain is a place used for vacation, relaxation or as a day...', '4,8', 'lib/assets/homePage/BromoMountain.png', false),
             ] else ...[
               // Last Search
             const Text(
@@ -198,13 +198,13 @@ class _SearchScreenState extends State<SearchScreen> {
                     'Kuta Beach',
                     'Bali, Indonesia',
                     '4.8',
-                    'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&q=80',
+                    'lib/assets/homePage/KutaBeach.png',
                   ),
                   _buildFavoriteCard(
                     'Bromo Mountain',
                     'Jawa Ti, Indonesia',
                     '4.0',
-                    'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?auto=format&fit=crop&w=400&q=80',
+                    'lib/assets/homePage/BromoMountain.png',
                   ),
                 ],
               ),
@@ -284,7 +284,7 @@ class _SearchScreenState extends State<SearchScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           image: DecorationImage(
-            image: NetworkImage(imageUrl),
+            image: AssetImage(imageUrl),
             fit: BoxFit.cover,
           ),
         ),
@@ -372,7 +372,7 @@ class _SearchScreenState extends State<SearchScreen> {
           // Image
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.network(
+            child: Image.asset(
               imageUrl,
               height: 120,
               width: 100,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+
 import 'bookingDatePicker.dart';
 import '../booking/detailBooking.dart';
 
@@ -42,9 +43,9 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
   void initState() {
     super.initState();
     _galleryImages = [
-      widget.imageUrl,
-      'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1518548419970-58e3b4079830?auto=format&fit=crop&w=800&q=80',
+      'lib/assets/detailPage/Showcase1.png',
+      'lib/assets/detailPage/Showcase2.png',
+      'lib/assets/detailPage/Showcase3.png',
     ];
     _scrollController.addListener(_onScroll);
     _timer = Timer.periodic(const Duration(seconds: 4), (Timer timer) {
@@ -166,7 +167,7 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
                         },
                         itemCount: _galleryImages.length,
                         itemBuilder: (context, index) {
-                          return Image.network(
+                          return Image.asset(
                             _galleryImages[index],
                             fit: BoxFit.cover,
                           );
@@ -417,15 +418,11 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
         const SizedBox(height: 16),
         Row(
           children: [
-            _buildGalleryImage(
-                'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=200&q=80'),
+            _buildGalleryImage('lib/assets/detailPage/gallery/image1.png'),
             const SizedBox(width: 12),
-            _buildGalleryImage(
-                'https://images.unsplash.com/photo-1518548419970-58e3b4079830?auto=format&fit=crop&w=200&q=80'),
+            _buildGalleryImage('lib/assets/detailPage/gallery/image3.png'),
             const SizedBox(width: 12),
-            _buildGalleryMore(
-                'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=200&q=80',
-                '+20'),
+            _buildGalleryMore('lib/assets/detailPage/gallery/image2.png', '+20'),
           ],
         ),
         const SizedBox(height: 32),
@@ -441,8 +438,7 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
             width: double.infinity,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(
-                    'https://miro.medium.com/v2/resize:fit:1400/1*q61Sfy8A6o5zP_y7qOkJpw.png'), // Placeholder Map
+                image: AssetImage('lib/assets/DummyMaps.png'), 
                 fit: BoxFit.cover,
               ),
             ),
@@ -450,22 +446,52 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
               children: [
                 Center(
                   child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                        color: Color(0xFFFCD240), shape: BoxShape.circle),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
                     child: const Icon(Icons.location_on,
-                        color: Colors.black, size: 24),
+                        color: Color(0xFFFCD240), size: 28),
                   ),
                 ),
                 Positioned(
-                  bottom: 16,
+                  bottom: 20,
                   right: 16,
-                  child: Column(
-                    children: [
-                      _buildMapControl(Icons.add),
-                      const SizedBox(height: 8),
-                      _buildMapControl(Icons.remove),
-                    ],
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(Icons.remove, size: 20, color: Colors.black87),
+                        ),
+                        Container(height: 1, width: 24, color: Colors.grey.shade100),
+                        const SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: Icon(Icons.add, size: 20, color: Colors.black87),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -599,7 +625,7 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
     return Expanded(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Image.network(url, height: 80, fit: BoxFit.cover),
+        child: Image.asset(url, height: 80, fit: BoxFit.cover),
       ),
     );
   }
@@ -610,7 +636,7 @@ class _PlaceCoverScreenState extends State<PlaceCoverScreen> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.network(url,
+            child: Image.asset(url,
                 height: 80, width: double.infinity, fit: BoxFit.cover),
           ),
           Container(
