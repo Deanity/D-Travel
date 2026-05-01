@@ -22,7 +22,7 @@ class PlaceCoverScreen extends StatefulWidget {
     this.rating = '4,8',
     this.price = '245.00',
     this.imageUrl =
-        'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80',
+        'lib/assets/home/kutaBeach.png',
   });
 
   @override
